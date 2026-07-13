@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Data (downloaded via scripts/download_data.py)
+data/raw/
+data/test/
