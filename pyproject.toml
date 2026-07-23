@@ -9,4 +9,10 @@ dependencies = [
     "huggingface-hub>=1.23.0",
     "jupyterlab>=4.6.1",
     "pandas>=3.0.3",
+    "unstructured[pdf]>=0.24.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.22",
 ]
