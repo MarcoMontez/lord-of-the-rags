@@ -1,7 +1,14 @@
 services:
   ingestion:
-    build: .
+    build: ./services/ingestion
     ports:
       - "127.0.0.1:8888:8888"
     volumes:
-      - .:/workspace
+      - ./services/ingestion:/workspace
+
+  retrieval:
+    build: ./services/retrieval
+    ports:
+      - "127.0.0.1:8889:8888"
+    volumes:
+      - ./services/retrieval:/workspace

@@ -5,8 +5,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PATH="/opt/venv/bin:$PATH"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-        tesseract-ocr \
-        poppler-utils \
         ca-certificates \
         curl \
     && rm -rf /var/lib/apt/lists/*
