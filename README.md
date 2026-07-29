@@ -22,7 +22,7 @@ Each service lives in its own folder under `services/`, with its own `Dockerfile
 Both run in Docker so you don't need any of those system packages installed on the host.
 
 ```
-docker compose up --build -d
+docker compose up --build
 ```
 
 Then open http://localhost:8888 for ingestion's Jupyter Lab, and http://localhost:8889 for retrieval's (no login token on either). Each service's folder is bind-mounted at `/workspace` in its container, so edits on the host are reflected live.

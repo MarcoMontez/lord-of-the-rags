@@ -1,6 +1,7 @@
 services:
   ingestion:
     build: ./services/ingestion
+    user: "${UID}:${GID}"
     ports:
       - "127.0.0.1:8888:8888"
     volumes:
@@ -8,6 +9,7 @@ services:
 
   retrieval:
     build: ./services/retrieval
+    user: "${UID}:${GID}"
     ports:
       - "127.0.0.1:8889:8888"
     volumes:
