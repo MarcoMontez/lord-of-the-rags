@@ -1,7 +1,25 @@
 services:
+  db:
+    image: pgvector/pgvector:pg17
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   ingestion:
     build: ./services/ingestion
-    user: "${UID}:${GID}"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "127.0.0.1:8888:8888"
     volumes:
@@ -9,8 +27,36 @@ services:
 
   retrieval:
     build: ./services/retrieval
-    user: "${UID}:${GID}"
     ports:
       - "127.0.0.1:8889:8888"
     volumes:
       - ./services/retrieval:/workspace
+
+  embeddings:
+    image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
+    command: ["--model-id", "BAAI/bge-small-en-v1.5"]
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./data/embeddings:/data
+
+  query-rewriter:
+    image: ollama/ollama:latest
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - "ollama serve & sleep 5 && ollama pull qwen3:1.7b-q8_0 && wait"
+    ports:
+      - "127.0.0.1:11434:11434"
+    volumes:
+      - query_rewriter_models:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  pgdata:
+  query_rewriter_models:
